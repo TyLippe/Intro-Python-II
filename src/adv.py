@@ -54,29 +54,24 @@ player = Player('Ty', room['outside'])
 #
 # If the user enters "q", quit the game.
 
-choices = ['n', 'e', 's', 'w']
+directions = {'n':'n_to', 'e':'e_to', 's':'s_to', 'w':'w_to'}
 
 def intro():
     print(f'Welcome to the game, {player.name}')
     
 intro()
 
-def moveNorth():
-    if move
+def location(player, prev_room = ''):
+    if player.current_room.name != prev_room:
+        print(f'\nCurrent Room: {player.current_room.name}')
+        print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
 
 while True: 
-    print(f'\nCurrent Room: {player.current_room.name}')
-    print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
     move = input('What direction would you like to go? \n(n, e ,s ,w)\n')
-    if move in choices:
-        if move == 'n' and hasattr(player.current_room, 'n_to'):
-            player.current_room = player.current_room.n_to
-        elif move == 'e' and hasattr(player.current_room, 'e_to'):
-            player.current_room = player.current_room.e_to
-        elif move == 's' and hasattr(player.current_room, 's_to'):
-            player.current_room = player.current_room.s_to
-        elif move == 'w' and hasattr(player.current_room, 'w_to'):
-            player.current_room = player.current_room.w_to
+    if move in directions:
+        prev_room = player.current_room.name
+        player.current_room = player.current_room.enterRoom(directions[move])
+        location(player, prev_room)
     elif move == 'q':
         print('\n Thanks for playing! \n')
         break

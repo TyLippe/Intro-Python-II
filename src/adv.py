@@ -1,10 +1,12 @@
 from room import Room
+from player import Player
+import textwrap
 
 # Declare all the rooms
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+                     "North of you, the cave mount beckons lgvdsfv dfnvbdofnbodfnbodfnb ono ndfobndibionvindfiv ndfi ndifovnidfnv iodnfv idfnv idfnvio dnfvindf ivndfnv knkn kvfnvdfv"),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
@@ -39,6 +41,8 @@ room['treasure'].s_to = room['narrow']
 
 # Make a new player object that is currently in the 'outside' room.
 
+player = Player('Ty', room['outside'])
+
 # Write a loop that:
 #
 # * Prints the current room name
@@ -49,3 +53,25 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+choices = ['n', 'e', 's', 'w']
+
+while True: 
+    print(f'Welcome to the game, {player.name}')
+    print(f'Current Room: {player.current_room.name}')
+    print(textwrap.fill(f'Description: {player.current_room.description}', 50))
+    move = input('What direction would you like to go? \n (n, e ,s ,w)')
+    if move in choices:
+        if move == 'n':
+            player.current_room = player.current_room.n_to
+        elif move == 'e':
+            player.current_room = player.current_room.e_to
+        elif move == 's':
+            player.current_room = player.current_room.s_to
+        elif move == 'w':
+            player.current_room = player.current_room.w_to
+    elif move == 'q':
+        print('Thanks for playing!')
+        break
+    else:
+        print('You cannot go that way!')

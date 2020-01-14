@@ -6,7 +6,7 @@ import textwrap
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons lgvdsfv dfnvbdofnbodfnbodfnb ono ndfobndibionvindfiv ndfi ndifovnidfnv iodnfv idfnv idfnvio dnfvindf ivndfnv knkn kvfnvdfv"),
+                     "North of you, the cave mount beckons"),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
@@ -56,22 +56,29 @@ player = Player('Ty', room['outside'])
 
 choices = ['n', 'e', 's', 'w']
 
-while True: 
+def intro():
     print(f'Welcome to the game, {player.name}')
-    print(f'Current Room: {player.current_room.name}')
-    print(textwrap.fill(f'Description: {player.current_room.description}', 50))
-    move = input('What direction would you like to go? \n (n, e ,s ,w)')
+    
+intro()
+
+def moveNorth():
+    if move
+
+while True: 
+    print(f'\nCurrent Room: {player.current_room.name}')
+    print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
+    move = input('What direction would you like to go? \n(n, e ,s ,w)\n')
     if move in choices:
-        if move == 'n':
+        if move == 'n' and hasattr(player.current_room, 'n_to'):
             player.current_room = player.current_room.n_to
-        elif move == 'e':
+        elif move == 'e' and hasattr(player.current_room, 'e_to'):
             player.current_room = player.current_room.e_to
-        elif move == 's':
+        elif move == 's' and hasattr(player.current_room, 's_to'):
             player.current_room = player.current_room.s_to
-        elif move == 'w':
+        elif move == 'w' and hasattr(player.current_room, 'w_to'):
             player.current_room = player.current_room.w_to
     elif move == 'q':
-        print('Thanks for playing!')
+        print('\n Thanks for playing! \n')
         break
     else:
-        print('You cannot go that way!')
+        print('\n You cannot go that way! \n')

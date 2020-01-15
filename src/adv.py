@@ -41,7 +41,7 @@ room['treasure'].s_to = room['narrow']
 
 # Make a new player object that is currently in the 'outside' room.
 
-player = Player('Ty', room['outside'])
+player = Player('', room['outside'])
 
 # Write a loop that:
 #
@@ -56,16 +56,23 @@ player = Player('Ty', room['outside'])
 
 directions = {'n':'n_to', 'e':'e_to', 's':'s_to', 'w':'w_to'}
 
+# Welcome the player to the game and take their Player name
 def intro():
-    print(f'Welcome to the game, {player.name}')
-    
-intro()
+    player.name = input('What is your name Traveler?')
+    print(f'\nWelcome to the game, {player.name}')
 
+# Check if the user is going entering a new room, if they are we print the new room info
 def location(player, prev_room = ''):
     if player.current_room.name != prev_room:
         print(f'\nCurrent Room: {player.current_room.name}')
         print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
 
+# Run the introduction and then print the player information to start the game
+intro()
+print(f'\nCurrent Room: {player.current_room.name}')
+print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
+
+# Loop that allows player to enter movement and also is checking if they entered a new room or quit the game.
 while True: 
     move = input('What direction would you like to go? \n(n, e ,s ,w)\n')
     if move in directions:

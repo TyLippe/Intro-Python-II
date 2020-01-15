@@ -2,9 +2,10 @@
 # description attributes.
 
 class Room: 
-    def __init__(self, name, description):
+    def __init__(self, name, description, item_list=[]):
         self.name = name
         self.description = description
+        self.item_list = item_list
         self.n_to = self
         self.e_to = self
         self.s_to = self
@@ -16,5 +17,6 @@ class Room:
             print('\nYou explore in that direction and find no where to go\n')
         return new_room
 
+        
 
  

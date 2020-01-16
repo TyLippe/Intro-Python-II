@@ -26,25 +26,25 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 item = {
-    1: Item('Infinity Gauntlet', 'Some glove with a lot of shiny rocks in it'),
+    'gauntlet': Item('Gauntlet', 'Some glove with a lot of shiny rocks in it'),
 
-    2: Item('Lightsaber', 'Flashlight weapon'),
+    'lightsaber': Item('Lightsaber', 'Flashlight weapon'),
 
-    3: Item('Proton Pack', 'Don`t cross the streams'),
+    'goop': Item('Goop', 'Slimey goop'),
 
-    4: Item('Noisey Cricket', 'Chirp chirp'),
+    'bug': Item('Bug', 'Chirp chirp'),
 
-    5: Item('Katana', 'A freakin Katana!'),
+    'katana': Item('Katana', 'A freakin Katana!'),
 
-    6: Item('Battery', 'Just a AA battery'),
+    'battery': Item('Battery', 'Just a AA battery'),
 
-    7: Item('Golden Spatula', 'It is a golden spatula, pretty straight forward'),
+    'spatula': Item('Spatula', 'It is a spatula, pretty straight forward'),
 
-    8: Item('Coins', 'Money, money, money'),
+    'coins': Item('Coins', 'Money, money, money'),
 
-    9: Item('Sword', 'Looks sharp, be carful with that'),
+    'sword': Item('Sword', 'Looks sharp, be carful with that'),
 
-    10: Item('McNuggets', 'I am coding this while hungry')
+    'mcnuggets': Item('McNuggets', 'I am coding this while hungry')
 }
 
 # Link rooms together
@@ -60,11 +60,11 @@ room['treasure'].s_to = room['narrow']
 
 # Add items to a room
 
-room['outside'].item_list = [item[random.randint(1,10)].name]
-room['foyer'].item_list = [item[random.randint(1,10)].name, item[random.randint(1,10)].name]
-room['overlook'].item_list = [item[random.randint(1,10)].name]
-room['narrow'].item_list = [item[random.randint(1,10)].name, item[random.randint(1,10)].name]
-room['treasure'].item_list = [item[random.randint(1,10)].name]
+room['outside'].item_list = [item[random.choice([*item.keys()])]]
+room['foyer'].item_list = [item[random.choice([*item.keys()])], item[random.choice([*item.keys()])]]
+room['overlook'].item_list = [item[random.choice([*item.keys()])], item[random.choice([*item.keys()])]]
+room['narrow'].item_list = [item[random.choice([*item.keys()])]]
+room['treasure'].item_list = [item[random.choice([*item.keys()])]]
 
 #
 # Main
@@ -87,6 +87,7 @@ player = Player('', room['outside'])
 
 directions = {'go north':'n_to', 'go east':'e_to', 'go south':'s_to', 'go west':'w_to'}
 
+
 # Welcome the player to the game and take their Player name
 def intro():
     player.name = input('What is your name Traveler?')
@@ -97,9 +98,9 @@ def location(player, prev_room = ''):
     if player.current_room.name != prev_room:
         print(f'\nCurrent Room: {player.current_room.name}')
         print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
-        print(f'In this room: {player.current_room.item_list}')
-
-
+        print('In this room:')
+        for i in player.current_room.item_list:
+            print(f'{i.name}')
 
 # Run the introduction and then print the player information to start the game
 intro()
@@ -108,13 +109,19 @@ print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
 
 # Loop that allows player to enter movement and also is checking if they entered a new room or quit the game.
 while True: 
-    move = input('What would you like to do\n').lower()
+    move = input('\nWhat would you like to do\n').lower()
+    actions = move.split(' ')
     if move in directions:
         prev_room = player.current_room.name
         player.current_room = player.current_room.enterRoom(directions[move])
         location(player, prev_room)
+    elif actions[0] == 'take':
+            player.pickUp(player.inventory, item[actions[1]])
+            print('Inventory: ')
+            for i in player.inventory:
+                print(f'{i.name}'')
     elif move == 'quit':
-        print('\n Thanks for playing! \n')
+        print('Thanks for playing! \n')
         break
     else:
-        print('\n That is not a doable action \n')
+        print('That is not a doable action \n')

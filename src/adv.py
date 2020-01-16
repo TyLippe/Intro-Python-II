@@ -1,17 +1,9 @@
 from room import Room
 from player import Player
 from item import Item
+from monster import Monster
 import random as r
 import textwrap
-
-# Slow typing
-import sys,time
-def print_slow(str):
-    for letter in str:
-        sys.stdout.write(letter)
-        sys.stdout.flush()
-        time.sleep(0.1)
-
 
 # Declare all the rooms
 room = {
@@ -37,32 +29,25 @@ earlier adventurers. The only exit is to the south."""),
 # Declare all the items
 item = {
     'gauntlet':     Item('Gauntlet', 'Some glove with a lot of shiny rocks in it'),
-
     'lightsaber':   Item('Lightsaber', 'Flashlight weapon'),
-
-    'slime':         Item('Slime', 'Slimey'),
-
+    'slime':        Item('Slime', 'Slimey'),
     'bug':          Item('Bug', 'Put that thing down'),
-
     'katana':       Item('Katana', 'A freakin Katana!'),
-
     'battery':      Item('Battery', 'Just a AA battery'),
-
     'spatula':      Item('Spatula', 'It is a spatula, pretty straight forward'),
-
     'coins':        Item('Coins', 'Money, money, money'),
-
     'sword':        Item('Sword', 'Looks sharp, be carful with that'),
-
     'mcnuggets':    Item('McNuggets', 'I am coding this while hungry'),
+    'phone':        Item('Phone', 'Pretty sure it is cracked, totally not your fault'),
+    'sweater':      Item('Sweater', 'Are you about to put this on? Gross...'),
+    'sandwich':     Item('Sandwich', 'Still hungry'),
+    'parrot':       Item('Parrot', 'Pretty sure you are a pirate now'),
+}
 
-    'phone': Item('Phone', 'Pretty sure it is cracked, totally not your fault'),
-
-    'sweater': Item('Sweater', 'Are you about to put this on? Gross...'),
-
-    'sandwich': Item('Sandwich', 'Still hungry'),
-
-    'parrot': Item('Parrot', 'Pretty sure you are a pirate now')
+# Adding some monster to the dugeon 
+monster = {
+    'dracula':  Monster('Dracula', 8),
+    'godzilla': Monster('Godzilla', 12),
 }
 
 
@@ -86,17 +71,25 @@ room['treasure'].item_list = [item[r.choice([*item.keys()])]]
 
 
 # Make a new player object that is currently in the 'outside' room.
-player = Player('', room['outside'])
+player = Player('', room['outside'], 0)
+
+
 
 
 # Dictionary that holds directional input and the value tied to the input
 directions = {'go north':'n_to', 'go east':'e_to', 'go south':'s_to', 'go west':'w_to'}
 
 
-# Welcome's player to game and allows custom name input
+# Welcome's player to game and allows custom name input also shows player their hp
 def intro():
     player.name = input('What is your name Traveler?\n')
-    print_slow(f'\nWelcome to the game, {player.name}')
+    print(f'\nWelcome to the game, {player.name}')
+    roll()
+    print(f'You have {player.hp} health points! Be cautious!\n')
+
+# Random num generator for health and attack points
+def roll():
+    player.hp = r.randint(1,10)
 
 
 # Check if the user is going entering a new room, if they are print the new room info
@@ -107,6 +100,7 @@ def location(player, prev_room = ''):
         print('In this room:')
         for i in player.current_room.item_list:
             print(f'{i.name}')
+        
 
 
 # A quick view of a players inventory, prints name and description

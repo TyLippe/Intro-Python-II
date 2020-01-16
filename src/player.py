@@ -1,7 +1,8 @@
 class Player:
-    def __init__(self, name, current_room, inventory=[]):
+    def __init__(self, name, current_room, hp, inventory=[]):
         self.name = name
         self.current_room = current_room
+        self.hp = hp
         self.inventory = inventory
     # Pick up item adds to player.inventory while removing from room.item_list
     def pickUp(self, inventory, item):

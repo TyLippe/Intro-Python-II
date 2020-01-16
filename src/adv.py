@@ -44,10 +44,13 @@ item = {
     'parrot':       Item('Parrot', 'Pretty sure you are a pirate now'),
 }
 
+
 # Adding some monster to the dugeon 
 monster = {
     'dracula':  Monster('Dracula', 8),
     'godzilla': Monster('Godzilla', 12),
+    'pikachu':  Monster('Pikachu', 4),
+    'robot':    Monster('Robot', 8)
 }
 
 
@@ -62,18 +65,23 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 
-# Link items to a room
-room['outside'].item_list = [item[r.choice([*item.keys()])]]
+# Link items to a room, hardcoding sword to first room to prepare player for combat
+room['outside'].item_list = [item['sword']]
 room['foyer'].item_list = [item[r.choice([*item.keys()])], item[r.choice([*item.keys()])]]
 room['overlook'].item_list = [item[r.choice([*item.keys()])], item[r.choice([*item.keys()])]]
 room['narrow'].item_list = [item[r.choice([*item.keys()])]]
 room['treasure'].item_list = [item[r.choice([*item.keys()])]]
 
 
+# Link monsters to a room, no monster in first room
+room['foyer'].monster_list = [monster['pikachu']]
+room['overlook'].monster_list = [monster['dracula']]
+room['narrow'].monster_list = [monster['robot']]
+room['treasure'].monster_list = [monster['godzilla']]
+
+
 # Make a new player object that is currently in the 'outside' room.
 player = Player('', room['outside'], 0)
-
-
 
 
 # Dictionary that holds directional input and the value tied to the input
@@ -87,6 +95,7 @@ def intro():
     roll()
     print(f'You have {player.hp} health points! Be cautious!\n')
 
+
 # Random num generator for health and attack points
 def roll():
     player.hp = r.randint(1,10)
@@ -99,8 +108,10 @@ def location(player, prev_room = ''):
         print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
         print('In this room:')
         for i in player.current_room.item_list:
-            print(f'{i.name}')
-        
+            print(f'{i.name}')   
+        print('\nMonster in this room:')
+        for i in player.current_room.monster_list:
+            print(f'{i.name}')     
 
 
 # A quick view of a players inventory, prints name and description

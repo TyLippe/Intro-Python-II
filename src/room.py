@@ -1,8 +1,9 @@
 class Room: 
-    def __init__(self, name, description, item_list=[]):
+    def __init__(self, name, description, item_list=[], monster_list=[]):
         self.name = name
         self.description = description
         self.item_list = item_list
+        self.monster_list = monster_list
         self.n_to = self
         self.e_to = self
         self.s_to = self

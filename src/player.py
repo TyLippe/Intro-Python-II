@@ -8,9 +8,16 @@ class Player:
         self.inventory = inventory
     def pickUp(self, inventory, item):
         if item in self.current_room.item_list:
-            print(f'You picked up {item.name}')
+            print(f'\nYou picked up {item.name}')
             inventory.append(item)
             self.current_room.item_list.remove(item)
         else:
             print('That item is not in here')
+    def drop(self, inventory, item):
+        if item in inventory:
+            print(f'\nYou dropped {item.name}')
+            inventory.remove(item)
+            self.current_room.item_list.append(item)
+        else:
+            print('You cannot drop an item you do not have')
 

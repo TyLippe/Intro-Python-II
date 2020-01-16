@@ -4,6 +4,15 @@ from item import Item
 import random
 import textwrap
 
+# slow typing
+# import sys,time
+
+# def print_slow(str):
+#     for letter in str:
+#         sys.stdout.write(letter)
+#         sys.stdout.flush()
+#         time.sleep(0.1)
+
 # Declare all the rooms
 
 room = {
@@ -26,25 +35,25 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 item = {
-    'gauntlet': Item('Gauntlet', 'Some glove with a lot of shiny rocks in it'),
+    'gauntlet':     Item('Gauntlet', 'Some glove with a lot of shiny rocks in it'),
 
-    'lightsaber': Item('Lightsaber', 'Flashlight weapon'),
+    'lightsaber':   Item('Lightsaber', 'Flashlight weapon'),
 
-    'goop': Item('Goop', 'Slimey goop'),
+    'slime':         Item('Slime', 'Slimey'),
 
-    'bug': Item('Bug', 'Chirp chirp'),
+    'bug':          Item('Bug', 'Chirp chirp'),
 
-    'katana': Item('Katana', 'A freakin Katana!'),
+    'katana':       Item('Katana', 'A freakin Katana!'),
 
-    'battery': Item('Battery', 'Just a AA battery'),
+    'battery':      Item('Battery', 'Just a AA battery'),
 
-    'spatula': Item('Spatula', 'It is a spatula, pretty straight forward'),
+    'spatula':      Item('Spatula', 'It is a spatula, pretty straight forward'),
 
-    'coins': Item('Coins', 'Money, money, money'),
+    'coins':        Item('Coins', 'Money, money, money'),
 
-    'sword': Item('Sword', 'Looks sharp, be carful with that'),
+    'sword':        Item('Sword', 'Looks sharp, be carful with that'),
 
-    'mcnuggets': Item('McNuggets', 'I am coding this while hungry')
+    'mcnuggets':    Item('McNuggets', 'I am coding this while hungry')
 }
 
 # Link rooms together
@@ -87,10 +96,9 @@ player = Player('', room['outside'])
 
 directions = {'go north':'n_to', 'go east':'e_to', 'go south':'s_to', 'go west':'w_to'}
 
-
 # Welcome the player to the game and take their Player name
 def intro():
-    player.name = input('What is your name Traveler?')
+    player.name = input('What is your name Traveler?\n')
     print(f'\nWelcome to the game, {player.name}')
 
 # Check if the user is going entering a new room, if they are we print the new room info
@@ -102,10 +110,18 @@ def location(player, prev_room = ''):
         for i in player.current_room.item_list:
             print(f'{i.name}')
 
+def inventory(player):
+    print('\nInventory:')
+    for i in player.inventory:
+        print(f'\nItem Name: {i.name}\nDescription: {i.description}')
+
 # Run the introduction and then print the player information to start the game
 intro()
 print(f'\nCurrent Room: {player.current_room.name}')
 print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
+print('In this room:')
+for i in player.current_room.item_list:
+    print(f'{i.name}')
 
 # Loop that allows player to enter movement and also is checking if they entered a new room or quit the game.
 while True: 
@@ -119,7 +135,14 @@ while True:
             player.pickUp(player.inventory, item[actions[1]])
             print('Inventory: ')
             for i in player.inventory:
-                print(f'{i.name}'')
+                print(f'{i.name}')
+    elif actions[0] == 'drop':
+            player.drop(player.inventory, item[actions[1]])
+            print('Inventory: ')
+            for i in player.inventory:
+                print(f'{i.name}')
+    elif actions[0] == 'inventory':
+            inventory(player)
     elif move == 'quit':
         print('Thanks for playing! \n')
         break

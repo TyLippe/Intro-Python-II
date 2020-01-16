@@ -1,6 +1,3 @@
-# Implement a class to hold room information. This should have name and
-# description attributes.
-
 class Room: 
     def __init__(self, name, description, item_list=[]):
         self.name = name
@@ -10,7 +7,7 @@ class Room:
         self.e_to = self
         self.s_to = self
         self.w_to = self
-    # Function that will check if the room has the directions that the player inputs, if not they stay in their current room and are given a message
+    # Check if the current_room has the directions that the player inputs, if not player stays in current_room and print error
     def enterRoom(self, directions):
         new_room = self.__getattribute__(directions)
         if new_room == self:

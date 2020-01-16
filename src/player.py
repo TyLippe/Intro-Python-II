@@ -20,4 +20,23 @@ class Player:
             self.current_room.item_list.append(item)
         else:
             print('You cannot drop an item you do not have')
-
+    # Combat allows a player to fight a monster if monster has no health the monster should drop an item
+    def combat(self, item, monster):
+        if monster in self.current_room.monster_list:
+            monster.hp -= item.attack
+            print(f'You hit {monster.name} with {item.name} for {item.attack} damage!')
+            print(f'{monster.name} has {monster.hp} hp left!')
+            if monster.hp <= 0:
+                self.current_room.item_list.append(monster.item)
+                self.current_room.monster_list.remove(monster)
+                print(f'You defeated {monster.name} and they dropped {monster.item.name}!')
+        else:
+            print('No reason to fight in here')
+    # Equip will put the chosen item at the end of the list, making it default for fights
+    def equip(self, item):
+        if item in self.inventory:
+            self.inventory.remove(item)
+            self.inventory.append(item)
+            print(f'You have equipped {item.name}')
+        else:
+            print('You do not have that item')

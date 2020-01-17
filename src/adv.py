@@ -1,7 +1,11 @@
 from room import Room
+from player import Player
+from item import Item
+from monster import Monster
+import random as r
+import textwrap
 
 # Declare all the rooms
-
 room = {
     'outside':  Room("Outside Cave Entrance",
                      "North of you, the cave mount beckons"),
@@ -22,8 +26,28 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 
-# Link rooms together
+# Declare all the items
+item = {
+    'gauntlet':     Item('Gauntlet', 'Some glove with a lot of shiny rocks in it', 4),
+    'lightsaber':   Item('Lightsaber', 'Flashlight weapon', 3),
+    'katana':       Item('Katana', 'A freakin Katana!', 4),
+    'battery':      Item('Battery', 'Just a AA battery', 0),
+    'spatula':      Item('Spatula', 'It is a spatula, pretty straight forward', 5),
+    'sword':        Item('Sword', 'Looks sharp, be carful with that', 2),
+    'bat':          Item('Bat', 'SWING!', 3),
+}
 
+
+# Adding some monster to the dugeon 
+monster = {
+    'dracula':  Monster('Dracula', 8, 1, item['bat']),
+    'godzilla': Monster('Godzilla', 12, 2, item['katana']),
+    'pikachu':  Monster('Pikachu', 4, 1, item['lightsaber']),
+    'robot':    Monster('Robot', 8, 1, item['battery'])
+}
+
+
+# Link rooms together
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
 room['foyer'].n_to = room['overlook']
@@ -33,11 +57,117 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-#
-# Main
-#
+
+# Link items to a room, hardcoding sword to first room to prepare player for combat
+room['outside'].item_list = [item['sword']]
+room['foyer'].item_list = [item[r.choice([*item.keys()])], item[r.choice([*item.keys()])]]
+room['overlook'].item_list = [item[r.choice([*item.keys()])], item[r.choice([*item.keys()])]]
+room['narrow'].item_list = [item[r.choice([*item.keys()])]]
+room['treasure'].item_list = [item[r.choice([*item.keys()])]]
+
+
+# Link monsters to a room, no monster in first room
+room['foyer'].monster_list = [monster['pikachu']]
+room['overlook'].monster_list = [monster['dracula']]
+room['narrow'].monster_list = [monster['robot']]
+room['treasure'].monster_list = [monster['godzilla']]
+
 
 # Make a new player object that is currently in the 'outside' room.
+player = Player('', room['outside'], 0)
+
+
+# Dictionary that holds directional input and the value tied to the input
+directions = {'go north':'n_to', 'go east':'e_to', 'go south':'s_to', 'go west':'w_to'}
+
+
+# Welcome's player to game and allows custom name input also shows player their hp
+def intro():
+    player.name = input('What is your name Traveler?\n')
+    print(f'\nWelcome to Generic Adventure Game Title, {player.name}')
+    roll()
+    print(f'You have {player.hp} health points! Be cautious!\n')
+
+
+# Random num generator for health and attack points
+def roll():
+    player.hp = r.randint(5,10)
+
+
+# Check if the user is going entering a new room, if they are print the new room info
+def location(player, prev_room = ''):
+    if player.current_room.name != prev_room:
+        print(f'\nCurrent Room: {player.current_room.name}')
+        print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
+        print('In this room:')
+        for i in player.current_room.item_list:
+            print(f'{i.name}')   
+        print('\nMonster in this room:')
+        for i in player.current_room.monster_list:
+            print(f'{i.name}\nHP: {i.hp}')   
+
+
+# A quick view of a players inventory, prints name and description
+def inventory(player):
+    print('\nInventory:')
+    for i in player.inventory:
+        print(f'Item Name: {i.name}\nDescription: {i.description}\nAttack: {i.attack}')
+
+
+# A view of all input options
+def inputChoices():
+    print('All Input`s Allowed:\n')
+    print('Go North\nGo South\nGo East\nGo West\nTake `item`\nDrop `item`\nEquip `item`\nFight `monster`\nInventory\nHelp\nQuit')
+
+
+# Introduce the player and let them know where they are currently
+intro()
+print(f'\nCurrent Room: {player.current_room.name}')
+print(textwrap.fill(f'Description: {player.current_room.description}\n', 50))
+print('In this room:')
+for i in player.current_room.item_list:
+    print(f'{i.name}')
+
+
+# Loop that checks player actions and decides what to return
+while True: 
+    cmd = input('\nWhat would you like to do\nType help for help\n').lower()
+    actions = cmd.split(' ')
+    if cmd in directions:
+        prev_room = player.current_room.name
+        player.current_room = player.current_room.enterRoom(directions[cmd])
+        location(player, prev_room)
+    elif actions[0] == 'take':
+            player.pickUp(player.inventory, item[actions[1]])
+            print('Inventory: ')
+            for i in player.inventory:
+                print(f'{i.name}')
+    elif actions[0] == 'drop':
+            player.drop(player.inventory, item[actions[1]])
+            print('Inventory: ')
+            for i in player.inventory:
+                print(f'{i.name}')
+    elif actions[0] == 'fight':
+            player.combat(player.inventory[-1], monster[actions[1]])
+            for i in player.current_room.monster_list:
+                i.fightBack(player)
+            if player.hp <= 0:
+                print('You have died')
+                break
+    elif actions[0] == 'equip':
+            player.equip(item[actions[1]])
+    elif cmd == 'remind':
+            location(player, prev_room)
+    elif cmd == 'inventory':
+            inventory(player)
+    elif cmd == 'help':
+            inputChoices()
+    elif cmd == 'quit':
+        print('Thanks for playing! \n')
+        break
+    else:
+        print('That is not a doable action \n')
+
 
 # Write a loop that:
 #

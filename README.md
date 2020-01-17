@@ -49,6 +49,7 @@ The `/src` directory contains the files `adv.py`, which is where the main logic 
 * Put the Player class in `player.py`.
   * Players should have a `name` and `current_room` attributes
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Create a file called `item.py` and add an `Item` class in there.
 
